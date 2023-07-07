@@ -1,214 +1,3 @@
-/*#include <stdio.h> 
-#include <stdlib.h>
-#include <time.h>
-#include <random>
-int randomInt(int max);
-int main()
-{
-    int i, j = 0;
-    const int L = 10;
-    const int totalHops = 20;
-    int sites[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-    for (int k = 0; k < L; k++)
-    {
-        sites[k] = k + 1;
-    }
-    int* location;
-    location = &sites[j];
-    //srandom(time(NULL));
-    printf("\nThe seed value for this 'random walk' is: %ld.\n\n", time(NULL));
-    printf("Initial location of the particle is at site %d.\n\n", *location);
-    //tracker[0] = sites[0];
-    for (i = 1; i <= totalHops; i++)
-    {
-        int direction = randomInt(2);
-        // Two possible directions for particle to move, 0 = left, 1 = right // 
-        if (direction == 1) {
-            location += 1; // pointer moves right one space on array //
-            if (location == &sites[L - 1] + 1) // takes particle from site 10 to 1 //
-            {
-                location = &sites[0];
-            }
-        }
-        else if (direction == 0) {
-            location -= 1; // pointer moves left one space on array //
-            if (location == &sites[0] - 1) // takes particle from site 1 to 10 //
-            {
-                location = &sites[L - 1];
-            }
-        }
-        printf("After %2.d hop(s), the particle is at site %d.\n", i, (*location));
-    } printf("\n");
-}
-// function definition //
-int randomInt(int max)
-{
-    return ( random() % max);
-}*/
-
-/* This program generates an N step Random Walk */
-//#ifdef _WIN32
-//#define _CRT_SECURE_NO_WARNINGS
-//#endif
-//#include <stdlib.h>
-//#include <stdio.h>
-//#include <math.h>
-//#include <time.h>
-//#include <iostream>
-//#include <list>
-// 
-//#include <bits/stdc++.h>
-//using namespace std;
-//using namespace Graph;
-
-//using namespace std;
-
-//double getRand()
-//{
-//    return rand() / ((double)RAND_MAX);
-//}
-//class Graph {
-//    int numVertices;
-//    std::list<int>* adjLists;
-//    bool* visited;
-
-//public:
-    //std::list<int>* adjLists;
-//    Graph(int vertices);
-//    void addEdge(int src, int dest);
-//    void RW(int startVertex);
-//    void print() {
-//        for (int i = 0; i < 1; i++) {
-//            list<int> aR;
-//            cout << i << ": ";
-//           for (int j = 0; j < adjLists[i].size(); j++) {
-//                cout << &adjLists[j] << " ";
-//                aR.push_back(2);// adjLists[j]);
-                //std::cin >> aR[n];
-                //aR.push_back(adjLists[j]);
-                //std::copy(adjLists[i].begin(), adjLists[i].end(), std::back_inserter(aR));
-                //std::cout << "The list " << &ar << " ";
-//            }
-//            cout << "The list " << &aR << " ";
-//            const int nbr = aR.size();
-//            std::cout << "The nbr " << &nbr << " ";
-//            int prob[10] = {};
-//            for (int x = 0; x < 2; x++) {
-//                 prob[x] = x + 1;
-//            }
-//            int* max = prob; //larger element pointer initially pointed to first element
-//            for (int f = 1; f < 10; f++) {
-//                if (prob[f] > *max)
-//                {
-//                  max = &prob[f]; //updating the pointer to maximum 
-//                }
-//            }
-//            int index = max - prob; //pointer arithmetic to obtain the index
-//            std::cout << "The largest index is " << index << "\n";
-//            }
-//         cout << endl;
-        
-//    }
-//};
-
-// Create a graph with given vertices,
-// and maintain an adjacency list
-//Graph::Graph(int vertices) {
-//    numVertices = vertices;
-//    adjLists = new list<int>[vertices];
-//}
-
-// Add edges to the graph
-//void Graph::addEdge(int src, int dest) {
-//    adjLists[src].push_back(dest);
-//    adjLists[dest].push_back(src);
-//}
-//void Graph::RW(int startVertex) {
-//    FILE* fileout;
-//    fileout = fopen("rajiv.txt", "w");
-//    int N, j, x;
-    //int sites[10] = { 1,2,3,4,5,6,7,8,9,10 };
-//    const int L = 10;
-//    int sites[L] = {};
-//    float r;
-//    srand((unsigned int)time(NULL));
-//    visited = new bool[numVertices];
-//    cout << "Visited Start Vertex" << visited[startVertex] << " ";
-//    int currVertex = visited[startVertex];
-//    cout << "Visited " << currVertex << " ";
-    //list<int>::iterator currVertex; //vertexnow = adjLists; // [currVertex] .begin();
-    //cout << " adjlist " << currVertex << " ";
-    //scanf("%i", &vertexnow);
-    //printf("Enter number of steps, N: ");
-    //scanf("%i", &);;
-//    x = 0 ;
-//    for (j = 1; j < 2; j++) {
-//        visited[j] = false;
-//    list<int>::iterator j;
-//    list<int> queue;
-   // cout << "adjvertex " << adjLists << " ";
-    //if (j != adjLists[currVertex].end()) {
-    //    int adjVertex = *j;
-    //    queue.push_back(adjVertex);
-    //}
-//    queue.push_back(currVertex);
-//    int nextVertex = queue.front();
-//    int size = queue.size();
-//    cout << "size of the list is : " << size;
-//    queue.pop_front();
-    //j = adjLists[nextVertex].begin();
-    //cout << j << " ";
-    //j++;
-    //int adjVertex = *j;
-    //queue.push_back(adjVertex);
-    //int nnextVertex = queue.front();
-    //cout << "List 9 contents: " << endl;
-    //list<int>::iterator ptr= adjLists[nextVertex].begin();
-    //auto it = next(ptr, 3);
-    //cout << "ptr " << *ptr;
- //   for (auto it = adjLists[nextVertex].begin(); it != adjLists[nextVertex].end(); ++it){
- //       cout << *it << endl;
- //       int adjVertex = *it;
- //       queue.push_back(adjVertex);
- //       cout << "size of the list is : " << adjLists[nextVertex].max_size();
- //       }
-    //cout << "nextadjvertex" << nnextVertex << " ";
-        //for (j = adjLists[currVertex].begin(); j != adjLists[currVertex].end(); ++j) {
-        //    int adjVertex = *j;
-        //    cout << "adjvertex " << adjLists << " ";
-        //    if (!visited[adjVertex]) {
-        //        visited[adjVertex] = true;
-        //        queue.push_back(adjVertex);
-        //    }
-        //}
-//    }
-
-    //for (j = 1; j < 200; j++)//(j = adjLists[currVertex].begin(); j != adjLists[currVertex].end(); ++j)
-    //{
-    //    r = getRand();
-    //    if (r < 0.5)
-    //    {
-            //x = x - 1;
-    //        x -= 1; // pointer moves right one space on array //
-    //        if (x == (int)&sites[L - 1] + 1) // takes particle from site 10 to 1 //
-    //        {
-    //            x = (int)&sites[0];
-    //        }
-    //    }
-    //    else
-    //    {
-    //        x += 1; // pointer moves left one space on array //
-    //        if (x == (int)&sites[0] - 1) // takes particle from site 1 to 10 //
-    //        {
-    //            x = (int)&sites[L - 1];
-    //        }
-    //    }
-    //    fprintf(fileout, " %d %d \n", j, x);
-    //}
-    //fclose(fileout);
-    //return 0;
-//}
-
 #include <iostream>
 #include <vector>
 #ifdef _WIN32
@@ -225,7 +14,7 @@ int randomInt(int max)
 using namespace std;
 
 class Graph {
-//private:
+    //private:
     int numVertices;
     vector<vector<int>> adjList;
 
@@ -291,23 +80,28 @@ public:
         int startVert = startVertex;
         list<int> queue;
         int b = 0;
-        while (b < 1500) {
-            for (int i = 0; i < 200; i++) {
+        while (b < 200) {
+            for (int i = 0; i < 251; i++) {
                 list<int> aR;
                 //cout << i << ": ";
-                cout << startVert << ": ";
+                //cout << startVert << ": ";
                 //if (i == startVert) 
                 for (int j = 0; j < adjList[i].size(); j++) {
-                    //cout << j << " ";
-                    aR.push_back(j);
-                    //std::cin >> aR[n];
-                    //aR.push_back(adjLists[j]);
-                    //std::copy(adjLists[i].begin(), adjLists[i].end(), std::back_inserter(aR));
-                    //std::cout << "The list " << &ar << " ";
+                        //cout << j << " ";
+                    if (i == startVert)
+                        aR.push_back(j);
+                        //std::cin >> aR[n];
+                        //aR.push_back(adjLists[j]);
+                        //std::copy(adjLists[i].begin(), adjLists[i].end(), std::back_inserter(aR));
+                        //std::cout << "The list " << &ar << " ";
 
-                }
+                 }
+                
                 //cout << "The list " << *aR << " ";
                 const int nbr = aR.size();
+                if (nbr == 0) {
+                    break;
+                }
                 //cout << "The nbr " << nbr << " ";
                 int prob[20] = {};
                 for (int x = 0; x < nbr; x++) {
@@ -327,7 +121,7 @@ public:
                 std::cout << "Vertex = " << *vertex << std::endl;
                 queue.push_back(*vertex);
                 b++;
-                //startVert = *vertex;
+                startVert = *vertex;
                 //for (int z = 0; z < queue.size(); z++) {
                 //    cout << queue[z] << " ";
                 //    cout << endl;
@@ -336,45 +130,10 @@ public:
             }
             cout << endl;
 
+
         }
     }
 };
-
-//void Graph::RW(int startVertex) {
-//            for (int i = 0; i < 1; i++) {
-//                list<int> aR;
-//                cout << i << ": ";
-//               for (int j = 0; j < adjList[i].size(); j++) {
-//                    cout << &adjList[j] << " ";
-                    //aR.push_back(2);// adjLists[j]);
-                    //std::cin >> aR[n];
-                    //aR.push_back(adjLists[j]);
-                    //std::copy(adjLists[i].begin(), adjLists[i].end(), std::back_inserter(aR));
-                    //std::cout << "The list " << &ar << " ";
-//                }
-//                cout << "The list " << &aR << " ";
-//                const int nbr = aR.size();
-//                std::cout << "The nbr " << &nbr << " ";
-//                int prob[10] = {};
-//                for (int x = 0; x < 2; x++) {
-//                     prob[x] = x + 1;
-//                }
-//                int* max = prob; //larger element pointer initially pointed to first element
-//                for (int f = 1; f < 10; f++) {
-//                    if (prob[f] > *max)
-//                    {
-//                      max = &prob[f]; //updating the pointer to maximum 
-//                    }
-//                }
-//                int index = max - prob; //pointer arithmetic to obtain the index
-//                std::cout << "The largest index is " << index << "\n";
-//                }
-//             cout << endl;
-
-//        }
-
-    //};
-
 
 
 int main()
