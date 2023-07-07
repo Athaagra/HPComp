@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
+#include <cstdlib>
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -100,6 +102,9 @@ public:
                 //cout << "The list " << *aR << " ";
                 const int nbr = aR.size();
                 if (nbr == 0) {
+                    for (int i = 0; i < 251; i++)
+                        startVert = (rand() % 10) + 1;
+            
                     break;
                 }
                 //cout << "The nbr " << nbr << " ";
