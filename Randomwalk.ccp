@@ -80,40 +80,49 @@ public:
     }
     void RW(int startVertex) {
         int startVert = startVertex;
+        cout << " \ *** this is the startvertex" << startVert;
         list<int> queue;
         int b = 0;
         while (b < 200) {
-            for (int i = 0; i < 251; i++) {
-                list<int> aR;
+            list<int> aR;
+            for (int i = 0; i <= startVert; i++) {
                 //cout << i << ": ";
                 //cout << startVert << ": ";
-                //if (i == startVert) 
-                for (int j = 0; j < adjList[i].size(); j++) {
+                if (i == startVert)
+                {
+                    cout << " \ *** this is the startvertex" << startVert;
+                }
+            }
+                for (int j = 0; j < adjList[startVert].size(); j++) {
+                        cout << adjList[startVert][j] << " ";
+                        int nb = adjList[startVert][j];
                         //cout << j << " ";
-                    if (i == startVert)
-                        aR.push_back(j);
+                    //if (i == startVert)
+                        aR.push_back(nb);
                         //std::cin >> aR[n];
                         //aR.push_back(adjLists[j]);
                         //std::copy(adjLists[i].begin(), adjLists[i].end(), std::back_inserter(aR));
-                        //std::cout << "The list " << &ar << " ";
+                        //std::cout << "The list " << aR << " ";
 
                  }
                 
                 //cout << "The list " << *aR << " ";
                 const int nbr = aR.size();
                 if (nbr == 0) {
-                    for (int i = 0; i < 251; i++)
-                        startVert = (rand() % 10) + 1;
+                    for (int i = 0; i < 1; i++)
+                        startVert = (rand() % 250) + 1;
+                        cout << "The new start vertex " << startVert << " ";
             
                     break;
                 }
-                //cout << "The nbr " << nbr << " ";
-                int prob[20] = {};
+                cout << "The nbr size " << nbr << " ";
+                int prob[251] = {};
                 for (int x = 0; x < nbr; x++) {
-                    prob[x] = x + 1;
+                    prob[x] = (rand() % 10) + 1;
+                    //cout << "The new start vertex " << startVert << " ";;
                 }
                 int* max = prob; //larger element pointer initially pointed to first element
-                for (int f = 1; f < nbr; f++) {
+                for (int f = 1; f <= nbr; f++) {
                     if (prob[f] > *max)
                     {
                         max = &prob[f]; //updating the pointer to maximum 
@@ -125,18 +134,19 @@ public:
                 //int newVertex = aR[index];
                 std::cout << "Vertex = " << *vertex << std::endl;
                 queue.push_back(*vertex);
-                b++;
                 startVert = *vertex;
+                b++;
+                cout << *vertex << " ";
                 //for (int z = 0; z < queue.size(); z++) {
                 //    cout << queue[z] << " ";
                 //    cout << endl;
                 //}
-                std::cout << "The while " << b << "\n";
+                //std::cout << "The while " << b << "\n";
             }
             cout << endl;
 
 
-        }
+        //}
     }
 };
 
