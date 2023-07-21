@@ -22,7 +22,7 @@ public:
 		// compile(ast);
 
 		// Print generated code.
-		module->print(llvm:outs(), nullptr);
+		module->print(llvm::outs(), nullptr);
 		// 3. Save module IR to file:
 		saveModuleToFile("./out.ll");
 	}
@@ -42,13 +42,15 @@ private:
 		// open a new context and module.
 		ctx = std::make_unique < llvm::LLVMContext>();
 		module = std::make_unique<llvm::Module>("EvaLLVM", *ctx);
+		// Create a new builder for the module.
+		builder = std::make_unique<llvm::IRBuilder<>>(*ctx);
 	}
 	/**
 	* Global LLVM context.
 	* It owns and manages the core "global" data of LLVM's core
 	* infrastructure, including the type and constant unique tables/
 	*/
-	std::unique_ptr < llv::LLVMContext> ctx;
+	std::unique_ptr<llvm::LLVMContext> ctx;
 	/**
 	* A Module instance is used to store all the information related to an
 	* LLVM module. Modules are the top level container of all other LLVM
