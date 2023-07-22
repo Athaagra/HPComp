@@ -30,8 +30,9 @@ public:
 	}
 private:
 	void compile(/* TODO: ast */){
-		fn=createFunction("main", llvm::FunctionType::get( builder->getInte32Ty(),
-																/* vararg */ false));
+		fn=createFunction(
+		"main", llvm::FunctionType::get( builder->getInt32Ty(),
+						  /* vararg */ false));
 		auto result = gen(/* ast */);
 		auto i32Result = builder->CreateIntCast(result, builder->getInt32Ty(), true);
 		builder->CreateRet(i32Result);
@@ -44,8 +45,8 @@ private:
 	/**
 	* Creates a function.
 	**/
-	llvm::FunctioncreateFunction(const std::string& fnName,
-								llvm::FunctionType* fnType){
+	llvm::Function* createFunction(const std::string& fnName,
+				      llvm::FunctionType* fnType){
 		// Function prototypr might already be defined:
 		auto fn = module->getFunction(fnName);
 		
@@ -55,6 +56,15 @@ private:
 		}
 		createFunctionBlock(fn);
 		return fn;	
+	}
+	/**
+	*	Creates function prototype (defines the function, but not the body)
+	**/
+	llvm::Function* createFunctionProto(const std::string& fnName,
+					    llvm::FunctionType* fnType) {
+	auto fn = llvm::Function::Create(fnType, llvm::Function::ExternalLinkage,fnName, *module);
+	verifyFunction(*fn);
+	return fn;	
 	}
 	/**
 	* Create function block.
@@ -70,17 +80,7 @@ private:
 	* fn->getBasicBlockList().push_back(block);
 	*/
 	llvm::BasicBlock* createBB(std::string name, llvm::Function* fn =nullptr) {
-		return llvm:BasicBlock::Create(*ctx, name, fn);
-	}
-	/**
-	*	Creates function prototype (defines the function, but not the body)
-	**/
-	llvm::Function* createFunctionProto(const std::string& fnName,
-										llvm::FunctionTypr* fnType) {
-		auto fn = llvm::Function::Create(fnType, llvm::Function::ExternalLinkage,
-											fnName, *module);
-		verifyFunction(*fn);
-		return fn;	
+		return llvm::BasicBlock::Create(*ctx, name, fn);
 	}
 	
 	/**
@@ -99,7 +99,7 @@ private:
 		ctx = std::make_unique<llvm::LLVMContext>();
 		module = std::make_unique<llvm::Module>("EvaLLVM", *ctx);
 		// Create a new builder for the module.
-		builder = std::make_unique<llvm:IRBuilder<>>(*ctx);
+		builder = std::make_unique<llvm::IRBuilder<>>(*ctx);
 	}
 	/**
 	* Currently compiling function.
@@ -110,7 +110,7 @@ private:
 	* It owns and manages the core "global" data of LLVM's core
 	* infrastructure, including the type and constant unique tables/
 	*/
-	std::unique_ptr < llv::LLVMContext> ctx;
+	std::unique_ptr<llvm::LLVMContext> ctx;
 	/**
 	* A Module instance is used to store all the information related to an
 	* LLVM module. Modules are the top level container of all other LLVM
