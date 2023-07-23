@@ -10,20 +10,23 @@
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Verifier.h"
+
+#include "./Logger.h"
 #include "./Environment.h"
-#include "llvm/IR/EvaParser.h"
+#include "./parser/EvaParser.h"
 using syntax::EvaParser;
 
 using Env = std::shared_ptr<Environment>;
 
-#define GEN_BINARY_OP(Op, varName)
-	do{
-		auto op1 = gen(exp.list[1], env);
-		auto op2 = gen(exp.list[2], env);
-		return builder->Op(op1, op2, varName);
-	}while(false)
+#define GEN_BINARY_OP(Op, varName)  \
+  do{                               \
+    auto op1 = gen(exp.list[1], env);\
+    auto op2 = gen(exp.list[2], env);\
+    return builder->Op(op1, op2, varName);\
+  }while(false)
+	
 class EvaLLVM {
-public:
+  public:
 	EvaLLVM() :parser(std::make_unique<EvaParser>()) {moduleInit();
 	setupExternFunctions();
 	setupGlobalEnvironment();}
@@ -39,6 +42,8 @@ public:
 
 		// Print generated code.
 		module->print(llvm::outs(), nullptr);
+		
+		std::cout << "\n";
 		// 3. Save module IR to file:
 		saveModuleToFile("./out.ll");
 	}
@@ -49,9 +54,10 @@ private:
 						  /* vararg */ false),
 		GlobalEnv);
 		createGlobalVar("VERSION", builder->getInt32(42));
-		auto result = gen(ast, GlobalEnv);
-		auto i32Result = builder->CreateIntCast(result, builder->getInt32Ty(), true);
-		builder->CreateRet(i32Result);
+		//auto result = gen(ast, GlobalEnv);
+		gen(ast);
+		//auto i32Result = builder->CreateIntCast(result, builder->getInt32Ty(), true);
+		builder->CreateRet(builder->getInt32(0));
 	}
 	/**
 	*
@@ -62,10 +68,11 @@ private:
 				case ExpType::NUMBER:
 					return builder->getInt32(exp.number);
 				// Strings
-				case ExpType::STRING:
-					auto re = std::regex("\\\\n");
-					auto str = std::regex_replace(exp.string, re, "\n");
-					return builder->CreateGlobalStringPtr(str);
+				case ExpType::STRING:{
+				  auto re = std::regex("\\\\n");
+				  auto str = std::regex_replace(exp.string, re, "\n");
+				  return builder->CreateGlobalStringPtr(str);
+				}
 				// Symbols
 				case ExpType::SYMBOL:
 				if (exp.string=="true" || exp.string == "false") {
@@ -73,13 +80,13 @@ private:
 				} else {
 					auto varName = exp.string;
 					auto value = env->lookup(varName);
-					if(auto localVar = llvm:dyn_cast<llvm::AllocaInst>(value)){
-						return builder->CreateLoad(localVar->getAllocatedType(), localVar,
-													varName.c_str());
+					// Local Vars
+					if (auto localVar = llvm:dyn_cast<llvm::AllocaInst>(value)){
+						return builder->CreateLoad(localVar->getAllocatedType(), localVar,varName.c_str());
 					}
+					//Global Var
 					else if(auto globalVar == llvm::dyn_cast<llvm::GlobalVariable>(value)){
-						return builder->CreateLoad(globalVar->getInitializer()->getType(),
-						globalVar, varName.c_str());
+						return builder->CreateLoad(globalVar->getInitializer()->getType(),globalVar, varName.c_str());
 					}
 					//return module->getNamedGlobal(exp.string)->getInitializer();
 				}
@@ -122,25 +129,37 @@ private:
 							auto cond = gen(exp.list[1], env);
 							//Then block;
 							auto thenBlock = createBB("then", fn);
-							auto elseBlock = createBB("else", fn);
-							auto ifEndBlock = createBB("ifend", fn);
+							
+							auto elseBlock = createBB("else");
+							auto ifEndBlock = createBB("ifend");
 							//Condition branch:
 							builder->CreateCondBr(cond, thenBlock, elseBlock);
-							builder->SetInsertPoint(thenBlock);
 							//Then branch:
+							builder->SetInsertPoint(thenBlock);
 							auto thenRes = gen(exp.list[2], env);
 							builder->CreateBr(ifEndBlock);
+							
+							
 							thenBlock = builder->GetInsertBlock();
+							//Else branch
 							fn->getBasicBlockList().push_back(elseBlock);
+							
+							
+							
 							//Else branch:
 							builder->SetInsertPoint(elseBlock);
 							auto elseRes = gen(exp.list[3], env);
 							build->CreateBr(ifEndBlock);
+							
+							
+							
 							elseBlock = builder->GetInsertBlock();
 							
 							//
 							//If-end block:
 							fn->getBasicBlockList().push_back(ifEndBlock);
+							
+							
 							builder->SetInsertPoint(ifEndBlock);
 							//Result of the if expression is phi:
 							auto phi = builder->CreatePHI(thenRes->getType(), 2, "tmpif");
@@ -170,13 +189,14 @@ private:
 							builder->SetInsertPoint(loopEndBlock);
 							
 							return builder->getInt32(0);
-						}
 					}
 					if(tag.type==ExpType::SYMBOL){
 						auto op = tag.string;
 						if(op=="var"){
-							auto varName = exp[1].string;
+							auto varNameDecl = exp.list[1];
+							auto varName = extractVarName(varNameDecl);
 							auto init = gen(exp.list[2], env);
+							auto varTy = extractVarType(varNameDecl);
 							auto varBinding = allocVar(varName, varTy, env);
 							return builder->CreateStore(init, varBinding);
 							//return createGlobalVar(varName,(llvm::Constant *) init);
@@ -185,7 +205,8 @@ private:
 							auto value = gen(exp.list[2], env);
 							auto varName = exp.list[1].string;
 							auto varBinding = env->lookup(varName);
-							return builder->CreateStore(value, varBinding);
+							builder->CreateStore(value, varBinding);
+							return value;
 						}
 						else if (op == "begin") {
 						//
@@ -261,8 +282,6 @@ private:
 		variable->setInitializer(init);
 		return variable;
 	}
-	  
-	}
 	void setupExternFunctions(){
 	  auto bytePtrTy=builder->getInt8Ty()->getPointerTo();
 	  
@@ -275,16 +294,15 @@ private:
 	* Creates a function.
 	**/
 	llvm::Function* createFunction(const std::string& fnName,
-				      llvm::FunctionType* fnType){
+				      llvm::FunctionType* fnType, Env env){
 		// Function prototypr might already be defined:
-		auto fn = module->getFunction(fnName);
-		
+	  auto fn = module->getFunction(fnName);
 		// If not, allocate the function:
-		if (fn == nullptr) {
-			fn = createFunctionProto(fnName, fnType, env);
-		}
-		createFunctionBlock(fn);
-		return fn;	
+	  if (fn == nullptr) {
+	    fn = createFunctionProto(fnName, fnType, env);
+	  }
+	  createFunctionBlock(fn);
+	  return fn;	
 	}
 	/**
 	*	Creates function prototype (defines the function, but not the body)
