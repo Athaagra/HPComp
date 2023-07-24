@@ -6,8 +6,8 @@
 
 class ErrorLogMessage : public std::basic_ostringstream<char> {
 	public:
-		¬ErrorLogMessage() {
-			std::cer << "Fatal error: " << str().c_str();
+		~ErrorLogMessage() {
+			std::cerr << "Fatal error: " << str().c_str();
 			exit(EXIT_FAILURE);
 			}
 		};

@@ -11,7 +11,7 @@
 /**
 * Environment: name storage.
 */
-class Environment : public std::enabled_shared_from_this<Environment>{
+class Environment : public std::enable_shared_from_this<Environment>{
 	public:
 	
 	Environment(std::map<std::string, llvm::Value*> record,
